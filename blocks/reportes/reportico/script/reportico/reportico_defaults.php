@@ -24,7 +24,8 @@
                 // REPORT BODY STYLES
                 $styles = array(
                     //"background-color" => "#cccccc",
-                    "border-width" => "2px 2px 2px 2px",
+                    //"border-width" => "2px 2px 2px 2px",
+                    "border-width" => "0px 0px 0px 0px",
                     "border-style" => "solid",
                     "border-color" => "#000000",
                     //"background-color" => "#eeeeee",
@@ -36,7 +37,8 @@
 
                 // CRITERIA BOX STYLES
                 $styles = array(
-                    "background-color" => "#eeeeee",
+                    //"background-color" => "#eeeeee",
+                    "background-color" => "#ffffff",
                     "border-style" => "solid",
                     "border-width" => "1px 1px 1px 1px",
                     "border-color" => "#888888",
@@ -54,13 +56,17 @@
 
             // DETAIL ROW BOX STYLES
             $styles = array(
-                "background-color" => "#cccccc",
+                //"background-color" => "#cccccc",
+                "background-color" => "#ffffff",
                 "margin" => "0 10 0 10",
+                "padding" => "0px 5px 0px 5px",
                 );
             $reportico->apply_styleset("ROW", $styles, false, "PDF");
 
             $styles = array(
-                "background-color" => "#dddddd",
+                //"background-color" => "#dddddd",
+                "background-color" => "#ffffff",
+                
                 );
             $reportico->apply_styleset("ALLCELLS", $styles, false, "PDF", "lineno() % 2 == 0");
 
@@ -116,8 +122,10 @@
 
             // Column header styles
             $styles = array(
-                "color" => "#ffffff",
-                "background-color" => "#999999",
+                //"color" => "#ffffff",
+                //"background-color" => "#999999",
+                "color" => "#000000",
+                "background-color" => "#ffffff",
                 "font-weight" => "bold",
                 );
             $reportico->apply_styleset("COLUMNHEADERS", $styles, false, "PDF");
@@ -128,38 +136,45 @@
                 // Create Report Title Page Header on every page of PDF
                 $reportico->create_page_header("H1", 1, "{REPORT_TITLE}{STYLE border-width: 1 0 1 0; margin: 15px 0px 0px 0px; border-color: #000000; font-size: 18; border-style: solid;padding:5px 0px 5px 0px; height:1cm; background-color: #000000; color: #ffffff; text-align: center}" );
                 $reportico->set_page_header_attribute("H1", "ShowInHTML", "no" );
-                $reportico->set_page_header_attribute("H1", "ShowInPDF", "yes" );
+                $reportico->set_page_header_attribute("H1", "ShowInPDF", "no" );
                 $reportico->set_page_header_attribute("H1", "justify", "center" );
 
                 // Create Image on every page of PDF
-                /*
-                $reportico->create_page_header("H2", 1, "{STYLE width: 100; height: 50; margin: 0 0 0 0; background-color: #003333; background-image:images/reportico100.png;}" );
+                
+                $reportico->create_page_header("H2", 1, "{STYLE width: 48; height: 60; margin: 0 0 0 0; background-color: #003333; background-image:images/UD_logo2.png;}" );
                 $reportico->set_page_header_attribute("H2", "ShowInHTML", "no" );
-                */
-
+                $reportico->set_page_header_attribute("H2", "ShowInPDF", "yes" );
+                
                 // Create Image on every page of PDF
-                $reportico->create_page_header("H3", 1, "Time: date('Y-m-d H:i:s'){STYLE font-size: 10; text-align: right; font-style: italic;}" );
+                $reportico->create_page_header("H3", 1, "Fecha: date('Y-m-d H:i:s'){STYLE font-size: 8; text-align: right; font-style: italic;}" );
                 $reportico->set_page_header_attribute("H3", "ShowInHTML", "no" );
+                $reportico->set_page_header_attribute("H3", "ShowInPDF", "yes" );
                 $reportico->set_page_header_attribute("H3", "justify", "right" );
 
                 // Create Page No on bottom of PDF page
-                $reportico->create_page_footer("F1", 2, "Page: {PAGE}{STYLE border-width: 1 0 0 0; margin: 40 0 0 0; font-style: italic; }" );
+                $reportico->create_page_footer("F1", 2, "Impreso por: Sistema Tike {STYLE border-width: 1 0 0 0; margin: 40 0 0 0; font-size: 8; text-align: left; font-style: italic; }" );
+                $reportico->create_page_footer("F2", 2, "Página: {PAGE}{STYLE border-width: 1 0 0 0; margin: 40 0 0 0; font-style: italic; }" );
+                $reportico->create_page_footer("F3", 2, "Fuente de datos: Sistema Sicapital {STYLE border-width: 1 0 0 0; margin: 40 0 0 0; font-size: 8; text-align: right; font-style: italic; }" );
             }
             else   // FPDF page headers
             {
                 // Create Report Title Page Header on every page of PDF
                 $reportico->create_page_header("H1", 2, "{REPORT_TITLE}{STYLE border-width: 1 0 1 0; margin: 15px 0px 0px 0px; border-color: #000000; font-size: 18; border-style: solid;padding:5px 0px 5px 0px; height:1cm; background-color: #000000; color: #ffffff}" );
                 $reportico->set_page_header_attribute("H1", "ShowInHTML", "no" );
-                $reportico->set_page_header_attribute("H1", "ShowInPDF", "yes" );
+                $reportico->set_page_header_attribute("H1", "ShowInPDF", "no" );
                 $reportico->set_page_header_attribute("H1", "justify", "center" );
 
                 // Create Image on every page of PDF
-                $reportico->create_page_header("H3", 1, "Time: date('Y-m-d H:i:s'){STYLE font-size: 10; text-align: right; font-style: italic;}" );
+                $reportico->create_page_header("H3", 1, "Fecha: date('Y-m-d H:i:s'){STYLE font-size: 10; text-align: right; font-style: italic; }" );
                 $reportico->set_page_header_attribute("H3", "ShowInHTML", "no" );
+                $reportico->set_page_header_attribute("H3", "ShowInPDF", "yes" );
                 $reportico->set_page_header_attribute("H3", "justify", "right" );
 
                 // Create Page No on bottom of PDF page
-                $reportico->create_page_footer("F1", 2, "Page: {PAGE}{STYLE border-width: 1 0 0 0; margin: 40 0 0 0; font-style: italic; }" );
+                $reportico->create_page_footer("F1", 1, "Impreso por: Sistema Tike {STYLE font-size: 8; text-align: left; font-style: italic; }" );
+                $reportico->create_page_footer("F2", 1, "Pag: {PAGE}{STYLE border-width: 1 0 0 0; margin: 40 0 0 0; font-style: italic; }" );
+                $reportico->create_page_footer("F3", 1, "Fuente de datos: Sistema Sicapital {STYLE border-width: 1 0 0 0; margin: 40 0 0 0; font-size: 8; text-align: right; font-style: italic; }" );
+
             }
     }   
 ?>

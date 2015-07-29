@@ -14,7 +14,7 @@ $dropdown_menu = array(
         "project" => "Tesoreria",
         "title" => "Tesoreria",
         "items" => array(
-            array("reportfile" => "informe_ingresos.xml", "title" => "Ingresos"),
+            array("reportfile" => "reporte_ingresos.xml", "title" => "Ingresos"),
           
         )
     ),

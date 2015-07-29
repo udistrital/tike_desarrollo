@@ -40,7 +40,7 @@
 	ini_set("memory_limit","512M");
 
     // Allow a good time for long reports to run. Set to 0 to allow unlimited time
-	ini_set("max_execution_time","180");
+	ini_set("max_execution_time","300");
 
     // Include Reportico - for embedding reportico in a script running from outside the Reportico directory, 
     // just include the full path to the file reportico.php
@@ -48,7 +48,7 @@
 	require_once('reportico.php');
 
     // Only turn on output buffering if necessary, normally leave this uncommented
-	ob_start();
+	//ob_start();
         include_once('login_reporte_especifico.php');
 	$q = new reportico();
 
@@ -290,6 +290,6 @@
     // Run the report
 	$q->execute();
 
-	ob_end_flush();
+	//ob_end_flush();
 
 ?>

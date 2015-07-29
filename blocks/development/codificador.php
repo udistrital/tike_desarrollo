@@ -2,9 +2,11 @@
 include_once ("../../core/crypto/Encriptador.class.php");
 
 $miCodificador = Encriptador::singleton ();
-echo $miCodificador->codificar ( "tike" ) . "<br>";
-echo $miCodificador->codificar ( "tike_" ) . "<br>";
-echo $miCodificador->codificar ( "s1cg3f@d2013" ) . "<br>";
+echo "clave: ".$miCodificador->codificarClave ( "sistemasoas" ) . "<br>";
+echo $miCodificador->codificar ( "Aristoteles$2434hhzkpru" ) . "<br>";
+echo $miCodificador->codificar ( "s1cg3f@d2014=EVA" ) . "<br>";
+
+
 echo $miCodificador->decodificar ( "2MbMftocNNQSXwZ39ubYAuNbvmB8BDUf99HuigWCoCw" ) . "<br>";
 
 /*

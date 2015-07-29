@@ -33,26 +33,24 @@ class Formulario {
         $rutaBloque .= $esteBloque ['grupo'] . "/" . $esteBloque ['nombre'];
         ?>
 
-        <div id="slider1_container" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 50px; overflow: hidden;">
+        <div id="slider1_container" style="position: absolute; top: 2px; left: 0px; width: 100%; height: 50px; overflow: hidden;">
             <!-- Slides Container -->
-            <div u="slides" style="cursor: move; position: absolute; overflow: hidden; left: 0px; top: 0px; width: 100%; height: 100px; overflow: hidden;">
-
-
-                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_13.jpg" /></div>
-                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_8.jpg" /></div>
-                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_1.jpg" /></div>
-                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_10.jpg" /></div>
-                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_12.jpg" /></div>
-                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_2.jpg" /></div>
+            <div u="slides" style="cursor: move; position: absolute; overflow: hidden; left: 0px; top: 2px; width: 100%; height: 45px; overflow: hidden;">
                 <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_3.jpg" /></div>
-                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_14.png" /></div>
-                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_15.jpg" /></div>
+                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_4.jpg" /></div>
+                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_5.jpg" /></div>
                 <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_6.jpg" /></div>
-                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_7.jpg" /></div>
-                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_9.jpg" /></div>
-                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_17.jpg" /></div>
+                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_8.jpg" /></div>
+                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_10.jpg" /></div>
+                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_13.jpg" /></div>
                 <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_16.jpg" /></div>
-                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/cross_blue.png" /></div>
+                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_17.jpg" /></div>
+                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_19.jpg" /></div>
+                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_21.jpg" /></div>
+                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_22.jpg" /></div>
+                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_23.jpg" /></div>
+                <div><img u="image" src="<?php echo $rutaBloque ?>/imagenes/slide_24.jpg" /></div>
+                
             </div>
         </div>
         <header>
@@ -150,7 +148,7 @@ class Formulario {
                 $atributos ['titulo'] = $this->lenguaje->getCadena($esteCampo . 'Titulo');
                 $atributos ['deshabilitado'] = false;
                 $atributos ['tamanno'] = 20;
-                $atributos ['maximoTamanno'] = '10';
+                $atributos ['maximoTamanno'] = '16';
                 $tab ++;
 
                 // Aplica atributos globales al control

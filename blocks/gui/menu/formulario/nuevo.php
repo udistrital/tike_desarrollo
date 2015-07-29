@@ -12,7 +12,7 @@ $directorio .= $this->miConfigurador->getVariableConfiguracion("enlace");
 $miSesion = Sesion::singleton();
 
 $nivel = $miSesion->nivelSesion();
-+
+
 // Consulta General
 $enlaceConsultaGeneral ['enlace'] = "pagina=consultaGeneral";
 $enlaceConsultaGeneral ['enlace'] .= "&usuario=" . $miSesion->getSesionUsuarioId();
@@ -27,7 +27,7 @@ $enlaceReportico ['enlace'] .= "&usuario=" . $miSesion->getSesionUsuarioId();
 if($nivel==0)
     {    $enlaceReporticoAdmin ['enlace']=$enlaceReportico ['enlace'];
          $enlaceReporticoAdmin ['enlace'] .= "&informes=admin";
-         $enlaceReporticoAdmin ['enlace'] .= "&acceso=sistemasoas";
+         $enlaceReporticoAdmin ['enlace'] .= "&acceso=";
          $enlaceReporticoAdmin ['urlCodificada'] = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($enlaceReporticoAdmin ['enlace'], $directorio);
          $enlaceReporticoAdmin ['nombre'] = "Administrar Reportes";
     }

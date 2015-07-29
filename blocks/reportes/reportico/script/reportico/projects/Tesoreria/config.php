@@ -8,7 +8,7 @@
 // -----------------------------------------------------------------------------
 
 // Password required to gain access to the project
-define('SW_PROJECT_PASSWORD', 'tesoreriaTike');
+define('SW_PROJECT_PASSWORD', '');
 
 // Location of Reportico Top Level Directory From Browser Point of View
 define('SW_HTTP_BASEDIR', './');
@@ -16,7 +16,7 @@ define('SW_HTTP_URLHOST', 'http://127.0.0.1');
 define('SW_DEFAULT_PROJECT', 'reports');
 
 // Project Title used at the top of menus
-define('SW_PROJECT_TITLE', 'Reportes Tesoreria');
+define('SW_PROJECT_TITLE', 'abc');
 
 // Identify whether to always run in into Debug Mode
 define('SW_ALLOW_OUTPUT', true);
