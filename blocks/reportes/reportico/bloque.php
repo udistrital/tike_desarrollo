@@ -12,7 +12,6 @@ if (! isset ( $GLOBALS ["autorizado"] )) {
 include_once ("core/builder/Bloque.interface.php");
 
 include_once ("core/manager/Configurador.class.php");
-
 // Elementos que constituyen un bloque típico CRUD.
 
 // Interfaz gráfica
@@ -43,7 +42,8 @@ class Bloque implements \Bloque {
 	var $miFuncion;
 	var $miSql;
 	var $miConfigurador;
-	
+	var $miLogger;
+        
         public 	function __construct($esteBloque, $lenguaje = "") {
 		
 		// El objeto de la clase Configurador debe ser único en toda la aplicación
@@ -67,6 +67,8 @@ class Bloque implements \Bloque {
 		$this->miSql = new Sql ();
 		$this->miFrontera = new Frontera ();
 		$this->miLenguaje = new Lenguaje ();
+                //Objeto de la clase Loger
+                $this->miLogger = \logger::singleton();
 	}
 	public function bloque() {
 		if (isset ( $_REQUEST ['botonCancelar'] ) && $_REQUEST ['botonCancelar'] == "true") {
@@ -82,30 +84,20 @@ class Bloque implements \Bloque {
 			$this->miFuncion->setSql ( $this->miSql );
 			$this->miFuncion->setFuncion ( $this->miFuncion );
 			$this->miFuncion->setLenguaje ( $this->miLenguaje );
-			
+                        
 			if (! isset ( $_REQUEST ['action'] )) {
-                            
-			$ruta= $this->miConfigurador->getVariableConfiguracion ( "host" ) . $this->miConfigurador->getVariableConfiguracion ( "site" );
-			$reporte='/blocks/reportes/reportico/script/reportico/./run.php?';
-                        $reporte.="informes=".$_REQUEST['informes'];
-                        $reporte.="&acceso=".$_REQUEST['acceso'];
-                        //echo "Url ".$ruta.$reporte;
-                                    //exit;
-                        //$this->miFrontera->frontera ();
-                        ?>
-                        <div style='width:100%; height: 650px'>
-                            <iframe src="<?php echo $ruta.$reporte;?>" style="width: 100%; height: 100%"></iframe>
-                         </div>
-                        <?php
-                                
-                                
+                                $this->miFrontera->frontera ();
+                                $log=array('accion'=>"CONSULTA",
+                                          'id_registro'=>$_REQUEST['informes']."|".(isset($_REQUEST['reporte'])?str_replace('\\', '', $_REQUEST['reporte']):''),
+                                          'tipo_registro'=>"GESTOR REPORTES",
+                                          'nombre_registro'=>(isset($_REQUEST['reporte'])?str_replace('\\', '', $_REQUEST['reporte']):'admin'),
+                                          'descripcion'=>"Ingreso a Reporte ".(isset($_REQUEST['reporte'])?str_replace('\\', '', $_REQUEST['reporte']):'')." del Proyecto ".$_REQUEST['informes'],
+                                         ); 
+                                $this->miLogger->log_usuario($log);
 			} else {
-				
 				$respuesta = $this->miFuncion->action ();
-				
 				// Si $respuesta==false, entonces se debe recargar el formulario y mostrar un mensaje de error.
 				if (! $respuesta) {
-					
 					$miBloque = $this->miConfigurador->getVariableConfiguracion ( 'esteBloque' );
 					$this->miConfigurador->setVariableConfiguracion ( 'errorFormulario', $miBloque ['nombre'] );
 				}

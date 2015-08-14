@@ -1,6 +1,6 @@
 <?php
 
-namespace financiero\gestionActa\consultarActa\funcion;
+namespace reportes\reportico\funcion;
 
 if (!isset($GLOBALS ["autorizado"])) {
     include ("index.php");
@@ -12,26 +12,11 @@ class redireccion {
     public static function redireccionar($opcion, $valor = "") {
         $miConfigurador = \Configurador::singleton();
         $miPaginaActual = $miConfigurador->getVariableConfiguracion("pagina");
-
         switch ($opcion) {
-            case "inserto" :
-                $variable = "pagina=" . $miPaginaActual;
-                $variable .= "&opcion=mensaje";
-                $variable .= "&mensaje=actualizo";
-                $variable .= "&numero_acta=" . $valor [0];
-                break;
 
-            case "noInserto" :
+            case "logger" :
                 $variable = "pagina=" . $miPaginaActual;
-                $variable .= "&opcion=noactualizo";
-                $variable .= "&mensaje=error";
-                break;
-
-            case "elimino" :
-                $variable = "pagina=" . $miPaginaActual;
-                $variable .= "&opcion=mensaje";
-                $variable .= "&mensaje=elimino";
-                $variable .= "&numero_acta=" . $valor;
+                $variable .= $valor;
                 break;
 
             case "noElimino" :
@@ -48,13 +33,6 @@ class redireccion {
 
                 break;
 
-            case "noObligaciones" :
-                $variable = "pagina=" . $miPaginaActual;
-                $variable .= "&opcion=mensaje";
-                $variable .= "&mensaje=otros";
-                $variable .= "&errores=noObligaciones";
-
-                break;
 
             case "regresar" :
                 $variable = "pagina=" . $miPaginaActual;
@@ -70,11 +48,12 @@ class redireccion {
         }
 
         $url = $miConfigurador->configuracion ["host"] . $miConfigurador->configuracion ["site"] . "/index.php?";
+        
+
         $enlace = $miConfigurador->configuracion ['enlace'];
         $variable = $miConfigurador->fabricaConexiones->crypto->codificar($variable);
         $_REQUEST [$enlace] = $enlace . '=' . $variable;
         $redireccion = $url . $_REQUEST [$enlace];
-
         echo "<script>location.replace('" . $redireccion . "')</script>";
     }
 

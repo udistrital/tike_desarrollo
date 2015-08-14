@@ -61,7 +61,7 @@ class Sql extends \Sql {
 			case "registrarEvento" :
 				$cadenaSql = "INSERT INTO ";
 				$cadenaSql .= $prefijo . "logger( ";
-				$cadenaSql .= "id_usuario, ";
+				$cadenaSql .= "id, ";
 				$cadenaSql .= "evento, ";
 				$cadenaSql .= "fecha) ";
 				$cadenaSql .= "VALUES( ";

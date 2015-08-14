@@ -4,8 +4,16 @@
  * en el arreglo $esteBloque. Esto también aplica para todos los archivos que se incluyan.
  */
 
+// Registrar los archvios js que deben incluirse
+
+$funcion=array();
 $indice=0;
-$funcion[] = '';
+$funcion[$indice++]="jquery.validationEngine.js";
+$funcion[$indice++]="jquery.validationEngine-es.js";
+$funcion[$indice++]="jquery-te.js";;
+$funcion[$indice++]="select2.js";
+$funcion[$indice++]="select2_locale_es.js";
+$funcion[$indice++]="timepicker.js";
 
 
 $rutaBloque=$this->miConfigurador->getVariableConfiguracion("host");
@@ -27,5 +35,9 @@ foreach ($funcion as $clave=>$nombre){
 		echo "\n</script>\n";
 	}
 }
+// Procesar las funciones requeridas en ajax
+//	include("Ajax.php");
+
+
 
 ?>

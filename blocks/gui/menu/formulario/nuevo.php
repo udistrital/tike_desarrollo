@@ -1,4 +1,6 @@
 <?php
+//include_once("../Sql.class.php");
+$miSql=new Sqlmenu();
 // var_dump($this->miConfigurador);
 $esteBloque = $this->miConfigurador->getVariableConfiguracion("esteBloque");
 
@@ -9,166 +11,116 @@ $rutaBloque .= $esteBloque ['grupo'] . "/" . $esteBloque ['nombre'];
 $directorio = $this->miConfigurador->getVariableConfiguracion("host");
 $directorio .= $this->miConfigurador->getVariableConfiguracion("site") . "/index.php?";
 $directorio .= $this->miConfigurador->getVariableConfiguracion("enlace");
+
+$conexion="estructura";
+$esteRecursoDB = $this->miConfigurador->fabricaConexiones->getRecursoDB($conexion);
+
 $miSesion = Sesion::singleton();
+//verifica los roles del usuario en el sistema
+$roles=$miSesion->RolesSesion();
+//consulta datos del usuario
+$cadena_sql = $miSql->getCadenaSql("datosUsuario", $roles[0]['usuario']);
+$regUser = $esteRecursoDB->ejecutarAcceso($cadena_sql, "busqueda");
 
-$nivel = $miSesion->nivelSesion();
+$tam=(count($roles)-1);
+$cod_rol='';
+$cod_app='';
+foreach ($roles as $key => $value) 
+        { if($key<$tam){$cod_rol.=$roles[$key]['cod_rol'].",";}
+          else {$cod_rol.=$roles[$key]['cod_rol'];}
+          
+          if( $key<$tam){$cod_app.=$roles[$key]['cod_app'].",";}
+          else {$cod_app.=$roles[$key]['cod_app'];}
+        }
+$parametro['cod_app']=$cod_app;
+$parametro['cod_rol']=$cod_rol;
+//busca los datos de los servicios y los menus según los roles del usuario
+$cadena_sql = $miSql->getCadenaSql("datosMenus", $parametro);
+$reg_menu = $esteRecursoDB->ejecutarAcceso($cadena_sql, "busqueda");
+//Arma la matriz de menus con sus repectivos grupos y servicios
+$mMenu=array( );
+foreach ($reg_menu as $key => $value) 
+    {
+     if(isset($reg_menu[$key]['url_host_enlace']) && $reg_menu[$key]['url_host_enlace']!='')
+           { $host=$reg_menu[$key]['url_host_enlace'];}
+     else  { $host=$directorio;}      
 
-// Consulta General
-$enlaceConsultaGeneral ['enlace'] = "pagina=consultaGeneral";
-$enlaceConsultaGeneral ['enlace'] .= "&usuario=" . $miSesion->getSesionUsuarioId();
-
-$enlaceConsultaGeneral ['urlCodificada'] = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($enlaceConsultaGeneral ['enlace'], $directorio);
-$enlaceConsultaGeneral ['nombre'] = "Consultas Generales";
-
-// Reportico
-$enlaceReportico ['enlace'] = "pagina=reportico";
-$enlaceReportico ['enlace'] .= "&usuario=" . $miSesion->getSesionUsuarioId();
-
-if($nivel==0)
-    {    $enlaceReporticoAdmin ['enlace']=$enlaceReportico ['enlace'];
-         $enlaceReporticoAdmin ['enlace'] .= "&informes=admin";
-         $enlaceReporticoAdmin ['enlace'] .= "&acceso=";
-         $enlaceReporticoAdmin ['urlCodificada'] = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($enlaceReporticoAdmin ['enlace'], $directorio);
-         $enlaceReporticoAdmin ['nombre'] = "Administrar Reportes";
+     $enlaceServ['URL']="pagina=" .$reg_menu[$key]['pagina_enlace'];
+     $enlaceServ['URL'].= "&usuario=" . $miSesion->getSesionUsuarioId();      
+     $enlaceServ['URL'].=$reg_menu[$key]['parametros'];
+     $enlaceServ['urlCodificada'] = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($enlaceServ['URL'], $host);   
+     
+     $mMenu[$reg_menu[$key]['menu']][$reg_menu[$key]['grupo']][$reg_menu[$key]['enlace']]=array('urlCodificada'=>$enlaceServ['urlCodificada']);    
+     unset($enlaceServ);
+    
     }
-
-         
-if($nivel==0 || $nivel==1)
-    {    $enlaceReporticoTes ['enlace']=$enlaceReportico ['enlace'];
-         $enlaceReporticoTes ['enlace'] .= "&informes=Tesoreria";
-         $enlaceReporticoTes ['enlace'] .= "&acceso=tesoreriaTike";
-         $enlaceReporticoTes ['urlCodificada'] = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($enlaceReporticoTes ['enlace'], $directorio);
-         $enlaceReporticoTes ['nombre'] = "Reportes Tesoreria";
-
-    }
-
-
-
-// gestion usuarios
-$enlaceUsuarios ['enlace'] = "pagina=gestionUsuarios";
-$enlaceUsuarios ['enlace'] .= "&usuario=" . $miSesion->getSesionUsuarioId();
-
-$enlaceUsuarios ['urlCodificada'] = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($enlaceUsuarios ['enlace'], $directorio);
-$enlaceUsuarios ['nombre'] = "Gestión Usuarios";
-
-//Administración Dependencias
-$enlaceregistrarDependencia ['enlace'] = "pagina=agregarDependencia";
-$enlaceregistrarDependencia['enlace'] .= "&usuario=" . $miSesion->getSesionUsuarioId();
-
-$enlaceregistrarDependencia['urlCodificada'] = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($enlaceregistrarDependencia['enlace'], $directorio);
-$enlaceregistrarDependencia['nombre'] = "Dependencias";
-
 // Fin de la sesión
-$enlaceFinSesion['enlace'] = "pagina=index";
-$enlaceFinSesion['enlace'] .= "&usuario=" . $miSesion->getSesionUsuarioId();
-
+    
+$enlaceFinSesion['enlace'] = "action=logintike";
+$enlaceFinSesion['enlace'].= "&pagina=index";
+$enlaceFinSesion['enlace'].= "&bloque=logintike";
+$enlaceFinSesion['enlace'].= "&bloqueGrupo=registro";
+$enlaceFinSesion['enlace'].= "&opcion=finSesion";
+$enlaceFinSesion['enlace'].= "&campoSeguro=" . $_REQUEST ['tiempo'];
+$enlaceFinSesion['enlace'].= "&sesion=" . $miSesion->getSesionId();
+$enlaceFinSesion['enlace'].= "&usuario=" . $miSesion->getSesionUsuarioId();
 $enlaceFinSesion['urlCodificada'] = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($enlaceFinSesion['enlace'], $directorio);
-$enlaceFinSesion['nombre'] = "Cerrar Sesión";
+$enlaceFinSesion['nombre'] = "Cerrar Sesión";    
+    
 
 //------------------------------- Inicio del Menú-------------------------- //
 
     ?>
     <nav id="cbp-hrmenu" class="cbp-hrmenu">
-        <ul>
+      <ul>
 
-<?php if ($nivel == 'muestra') {
-    ?>
-            <li>
-                <a href="#">Gestión de Elementos</a>
-                <div class="cbp-hrsub">
-                    <div class="cbp-hrsub-inner">
-                        <div>
-                            <h4>Cargue de Elementos</h4>
-                            <ul>
-                                <li><a href="<?php echo $enlaceRegistroElementos['urlCodificada'] ?>"><?php echo $enlaceRegistroElementos['nombre'] ?></a></li>
-                                <li><a href="<?php echo $enlaceModificarElementos['urlCodificada'] ?>"><?php echo $enlaceModificarElementos['nombre'] ?></a></li>
-                                <li><a href="<?php echo $enlaceImpresionPlacas['urlCodificada'] ?>"><?php echo $enlaceImpresionPlacas['nombre'] ?></a></li> 
-                            </ul>
-                        </div>
-                        <div>
-                            <h4>Movimientos</h4>
-                            <ul>
-                                <li><a href="<?php echo $enlaceTrasladosElementos['urlCodificada'] ?>"><?php echo $enlaceTrasladosElementos['nombre'] ?></a></li>
-                                <li><a href="<?php echo $enlaceSobranteFlatanteElementos['urlCodificada'] ?>"><?php echo $enlaceSobranteFlatanteElementos['nombre'] ?></a></li>
-                                <li><a href="<?php echo $enlaceBajasElementos['urlCodificada'] ?>"><?php echo $enlaceBajasElementos['nombre'] ?></a></li>
-                                <li><a href="<?php echo $enlaceAprobarBajas['urlCodificada'] ?>"><?php echo $enlaceAprobarBajas['nombre'] ?></a></li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h4>Asignación de Elementos Contratistas</h4>
-                            <ul>
-                                <li><a href="<?php echo $enlaceasignarInventarioC['urlCodificada'] ?>"><?php echo $enlaceasignarInventarioC['nombre'] ?></a></li>
-                                <li><a href="<?php echo $enlaceconsultarAsignacion['urlCodificada'] ?>"><?php echo $enlaceconsultarAsignacion['nombre'] ?></a></li>
-                                <li><a href="<?php echo $enlacedescargarInventario['urlCodificada'] ?>"><?php echo $enlacedescargarInventario['nombre'] ?></a></li>
-                                <li><a href="<?php echo $enlacegenerarPazSalvo['urlCodificada'] ?>"><?php echo $enlacegenerarPazSalvo['nombre'] ?></a></li>
-                            </ul>
-                        </div>
-                    </div><!-- /cbp-hrsub-inner -->
-                </div><!-- /cbp-hrsub -->
-            </li>
- <?php }  ?>
-
-<?php if ($nivel == '0') {
-    ?>
-            <li>
-                <a href="#">Administración</a>
+<?php //cada foreach arma encabezado del menu, grupo y servicio en su orden.
+        foreach ($mMenu as $mkey => $menus) 
+        {
+        ?> <li>
+                <a href="#"><?php echo $mkey;?> </a>
                 <div class="cbp-hrsub">
                     <div class="cbp-hrsub-inner"> 
-                        <div>
-                            <h4>Usuarios</h4>
-                            <ul>
-                                <li><a href="<?php echo $enlaceUsuarios['urlCodificada'] ?>"><?php echo $enlaceUsuarios['nombre'] ?></a></li>
-                                <!--li><a href="<?php echo $enlaceregistrarDependencia['urlCodificada'] ?>"><?php echo $enlaceregistrarDependencia['nombre'] ?></a></li-->
-                                <!--li><a href="<?php echo $enlaceGestionarGrupoC['urlCodificada'] ?>"><?php echo $enlaceGestionarGrupoC['nombre'] ?></a></li-->
-                            </ul>
-                        </div>
-                        <div>
-                            <h4>Reportes</h4>
-                            <ul>
-                                <li><a href="<?php echo $enlaceReporticoAdmin['urlCodificada'] ?>"><?php echo $enlaceReporticoAdmin['nombre'] ?></a></li>
-                            </ul>
-                        </div>                        
+              <?php foreach ($menus as $gkey => $grupos) 
+                        {?>  <div>
+                              <h4><?php echo $gkey;?></h4>
+                                <ul>
+                            <?php foreach ($grupos as $skey => $service) 
+                                    { ?>
+                                     <li><a href="<?php echo $grupos[$skey]['urlCodificada'] ?>"><?php echo $skey ?></a></li>
+                            <?php   } ?>                                 
+                                </ul>
+                            </div>
+                  <?php } ?>
                     </div><!-- /cbp-hrsub-inner -->
-                </div><!-- /cbp-hrsub -->
+                </div><!-- /cbp-hrsub --> 
             </li>
-<?php }  ?>
-            <li>
-                <a href="#">Gestor Reportes</a>
-                <div class="cbp-hrsub">
-                    <div class="cbp-hrsub-inner"> 
-                    <?php if ($nivel == '0' || $nivel == '1') { ?>                        
-                        <div>
-                            <h4>Gestor Reportes</h4>
-                            <ul>
-                                <li><a href="<?php echo $enlaceReporticoTes['urlCodificada'] ?>"><?php echo $enlaceReporticoTes['nombre'] ?></a></li>
-                            </ul>
-                        </div>
-                    <?php } ?>    
-                         <?php /*?>
-                        <div>
-                            <h4>Reportes Depreciación</h4>
-                            <ul><li><a href="<?php echo $enlaceConsultaGeneral['urlCodificada'] ?>"><?php echo $enlaceConsultaGeneral['nombre'] ?></a></li>
-                                <li><a href="<?php echo$enlaceregistrarDepreciacion['urlCodificada'] ?>"><?php echo$enlaceregistrarDepreciacion['nombre'] ?></a></li>
-                                <li><a href="<?php echo$enlacedepreciacionGeneral['urlCodificada'] ?>"><?php echo$enlacedepreciacionGeneral['nombre'] ?></a></li>
-                            </ul>
-                        </div>
-                        <?php */?>
-                    </div><!-- /cbp-hrsub-inner -->
-                </div><!-- /cbp-hrsub -->
-            </li>
-  
+  <?php } ?>            
             <li>
                 <a href="#">Mi Sesión</a>
                 <div class="cbp-hrsub">
                     <div class="cbp-hrsub-inner"> 
                         <div>
-                            <h4>Usuarios</h4>
+                            <h4>Usuario: <?php echo $regUser[0]['nombre']." ".$regUser[0]['apellido'] ?></h4>
                             <ul>
                                 <!--li><a href="<?php echo $enlaceUsuarios['urlCodificada'] ?>"><?php echo ($enlaceUsuarios['nombre']) ?></a></li-->
                                 <li><a href="<?php echo$enlaceFinSesion['urlCodificada'] ?>">Cerrar Sesión </a></li>
                             </ul>
                         </div>
+                        <div>
+                            <h4>Perfiles Activos</h4>
+                            <ul><?php
+                                    foreach ($roles as $value) {
+                                        ?>
+                                        <li><a href="#"><?php echo $value['rol'] ?></a></li>    
+                                        <?php
+                                    }
+                                ?>
+                            </ul>
+                        </div>
+                        
+                        
+ 
                     </div><!-- /cbp-hrsub-inner -->
                 </div><!-- /cbp-hrsub -->
             </li>

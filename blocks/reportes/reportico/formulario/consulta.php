@@ -1,5 +1,5 @@
 <?php
-
+/*
 //if(isset($_REQUEST)) {unset ($_REQUEST);}
 set_include_path('blocks/reportes/reportico/script/reportico');
 require_once('blocks/reportes/reportico/script/reportico/reportico.php');
@@ -20,5 +20,54 @@ $reporte = new reportico();
 
 $reporte->execute();
 
-ob_end_flush();
+ob_end_flush();*/
+?>
+<?php
+
+if (!isset($GLOBALS ["autorizado"])) {
+    include ("../index.php");
+    exit();
+}
+
+class consulta {
+
+    var $miConfigurador;
+    var $lenguaje;
+    var $miFormulario;
+    var $miSql;
+   
+    function __construct($lenguaje, $formulario, $sql) {
+        $this->miConfigurador = \Configurador::singleton();
+
+        $this->miConfigurador->fabricaConexiones->setRecursoDB('principal');
+
+        $this->lenguaje = $lenguaje;
+
+        $this->miFormulario = $formulario;
+
+        $this->miSql = $sql;
+        }
+
+    function miForm() {
+        // Rescatar los datos de este bloque
+        $esteBloque = $this->miConfigurador->getVariableConfiguracion("esteBloque");
+
+        $ruta= $this->miConfigurador->getVariableConfiguracion ( "host" ) . $this->miConfigurador->getVariableConfiguracion ( "site" );
+        $reporte='/blocks/reportes/reportico/reporteador/./run.php?';
+        $reporte.="informes=".$_REQUEST['informes'];
+        $reporte.="&acceso=".$_REQUEST['acceso'];
+        isset($_REQUEST['reporte'])?$reporte.="&reporte=".$_REQUEST['reporte']:'';
+        ?>
+        <div style='width:100%; height: 650px'>
+            <iframe src="<?php echo $ruta.$reporte;?>" style="width: 100%; height: 100%"></iframe>
+         </div>
+        <?php
+ 
+
+    }
+}
+
+$miSeleccionador = new consulta($this->lenguaje, $this->miFormulario, $this->sql);
+
+$miSeleccionador->miForm();
 ?>

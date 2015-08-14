@@ -1,65 +1,98 @@
-<?
+<?php
+include_once("core/manager/Configurador.class.php");
 
-namespace bloquesModelo\bloqueModelo1;
+class FronteraGestionUsuarios{
 
-if (! isset ( $GLOBALS ["autorizado"] )) {
-    include ("../index.php");
-    exit ();
-}
+	var $ruta;
+	var $sql;
+	var $funcion;
+	var $lenguaje;
+	var $formulario;
+	
+	var $miConfigurador;
+	
+	function __construct()
+	{
+	
+		$this->miConfigurador=Configurador::singleton();
+	}
 
-include_once ("core/manager/Configurador.class.php");
+	public function setRuta($unaRuta){
+		$this->ruta=$unaRuta;
+	}
 
-class Frontera {
-    
-    var $ruta;
-    var $sql;
-    var $funcion;
-    var $lenguaje;
-    var $miFormulario;
-    
-    var 
+	public function setLenguaje($lenguaje){
+		$this->lenguaje=$lenguaje;
+	}
 
-    $miConfigurador;
-    
-    function __construct() {
-        
-        $this->miConfigurador = \Configurador::singleton ();
-    
-    }
-    
-    public function setRuta($unaRuta) {
-        $this->ruta = $unaRuta;
-    }
-    
-    public function setLenguaje($lenguaje) {
-        $this->lenguaje = $lenguaje;
-    }
-    
-    public function setFormulario($formulario) {
-        $this->miFormulario = $formulario;
-    }
-    
-    function frontera() {
-        $this->html ();
-    }
-    
-    function setSql($a) {
-        $this->sql = $a;
-    
-    }
-    
-    function setFuncion($funcion) {
-        $this->funcion = $funcion;
-    
-    }
-    
-    function html() {
-        
-        //Como se tiene un solo formulario no es necesario un switch para cargarlo:
-        $this->ruta=$this->miConfigurador->getVariableConfiguracion("rutaBloque");
-        include_once ($this->ruta . "/formulario/form.php");
-        
-    }
+	public function setFormulario($formulario){
+		$this->formulario=$formulario;
+	}
+
+	function frontera()
+	{
+		$this->html();
+	}
+
+	function setSql($a)
+	{
+		$this->sql=$a;
+
+	}
+
+	function setFuncion($funcion)
+	{
+		$this->funcion=$funcion;
+
+	}
+
+	function html()
+	{
+		include_once("core/builder/FormularioHtml.class.php");
+		
+		$this->ruta=$this->miConfigurador->getVariableConfiguracion("rutaBloque");
+		
+		
+		$this->miFormulario=new formularioHtml();
+		
+		if(isset($_REQUEST['opcion'])){
+
+			$accion=$_REQUEST['opcion'];
+
+
+
+			switch($accion){
+				case "verificarDatos":
+					include_once($this->ruta."/formulario/verificarDatos.php");
+					break;				
+				case "nuevo":
+					include_once($this->ruta."formulario/nuevo.php");
+					break;
+                                    
+                                case "editar":
+					include_once($this->ruta."formulario/editar.php");
+					break;    
+                                    
+                                case "inhabilitar":
+					include_once($this->ruta."formulario/inhabilitar.php");
+					break;        
+					
+				case "mensaje":
+					include_once($this->ruta."formulario/mensaje.php");
+					break;	
+				
+			}
+		}else{
+			$accion="nuevo";
+			include_once($this->ruta."/formulario/consultarUsuarios.php");
+		}
+
+
+	}
+
+
+
+
 
 }
 ?>

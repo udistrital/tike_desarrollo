@@ -18,7 +18,7 @@ $url .= $this->miConfigurador->getVariableConfiguracion ( "site" );
 $url .= "/index.php?" . $this->miConfigurador->getVariableConfiguracion ( "enlace" );
 
 // Codificar las variables y asociarlas a la url
-$cadena = $this->miConfigurador->fabricaConexiones->crypto->codificar_url ( $cadenaACodificar, $url );
+$urlFinal = $this->miConfigurador->fabricaConexiones->crypto->codificar_url ( $cadenaACodificar, $url );
 
 // Registra la función javascript suponiendo que existe un control de texto cuyo id es entrada
 ?>
