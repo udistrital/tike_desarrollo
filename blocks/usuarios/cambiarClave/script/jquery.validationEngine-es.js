@@ -12,17 +12,20 @@
                     "alertTextCheckboxe": "* Este checkbox es obligatorio"
                 },
                 "requiredInFunction": { 
-                    "func": function(field, rules, i, options){
+                "func": function(field, rules, i, options){
                         return (field.val() == "test") ? true : false;
                     },
                     "alertText": "* Field must equal test"
                 },
+                "minNumberChars": {"regex":  /^(?=.*\d{2})/,"alertText": "* Requiere al menos dos números"},
+                "minLowerAlphaChars": {"regex": /^(.*[a-zA-Z].*){2}/,"alertText": "* Requiere al menos dos caracteres alfabéticos"},
+                "passwordEquals": {"regex":"none","alertText":"* Las contraseñas no coinciden"},
                 "minSize": {
                     "regex": "none",
                     "alertText": "* Mínimo de ",
                     "alertText2": " caracteres autorizados"
                 },
-				"groupRequired": {
+		"groupRequired": {
                     "regex": "none",
                     "alertText": "* Debe de rellenar al menos uno de los siguientes campos"
                 },
@@ -31,7 +34,7 @@
                     "alertText": "* Máximo de ",
                     "alertText2": " caracteres autorizados"
                 },
-		        "min": {
+		"min": {
                     "regex": "none",
                     "alertText": "* El valor mínimo es "
                 },
@@ -39,7 +42,7 @@
                     "regex": "none",
                     "alertText": "* El valor máximo es "
                 },
-		        "past": {
+		"past": {
                     "regex": "none",
                     "alertText": "* Fecha anterior a "
                 },
@@ -99,7 +102,7 @@
                     "regex": /^[0-9\ ]+$/,
                     "alertText": "* Sólo números"
                 },
-			    "onlyLetterSp": {
+		"onlyLetterSp": {
                     "regex": /^[a-zA-Z\ \']+$/,
                     "alertText": "* Sólo letras"
                 },

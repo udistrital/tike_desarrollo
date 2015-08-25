@@ -9,10 +9,11 @@
 
 
 $indice=0;
+
 $funcion[$indice++]="jquery.validationEngine.js";
 $funcion[$indice++]="jquery.validationEngine-es.js";
 $funcion[$indice++]="jquery-te.js";
-$funcion[$indice++]="jqueryui.js";
+/*$funcion[$indice++]="jqueryui.js";*/
 $funcion[$indice++]="datepicker_es.js";
 $funcion[$indice++]="combobox.js";
 

@@ -87,7 +87,11 @@ class FormProcessor {
                           //            var_dump($log);
                             $_COOKIE["aplicativo"]=$estaSesion;
                             $this->miLogger->log_usuario($log);
-                            Redireccionador::redireccionar('index', $registro [0]);
+                            //Si estado dif Activo redirecciona a pagina decambio contraseña
+                            if($registro [0] ['estado']==2)
+                                {Redireccionador::redireccionar('claves', $registro);}
+                            else
+                                {Redireccionador::redireccionar('index', $registro [0]);}
                         }
                     // Redirigir a la página principal del usuario, en el arreglo $registro se encuentran los datos de la sesion:
                     // $this->funcion->redireccionar("indexUsuario", $registro[0]);

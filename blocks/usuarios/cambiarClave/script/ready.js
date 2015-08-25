@@ -4,6 +4,24 @@ $("#cambiarClave").validationEngine({
     scroll: false
 });
 
+$(function() {
+    $("#cambiarClave").submit(function() {
+        var resultado=$("#cambiarClave").validationEngine("validate");
+        if (resultado) {
+            // console.log(filasGrilla);
+            return true;
+        }
+        return false;
+    });
+});
+
+$(function() {
+    $( "button" )
+    .button()
+    .click(function( event ) {
+        event.preventDefault();
+    });
+});
 
 
 $(function() {

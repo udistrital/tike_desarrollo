@@ -35,11 +35,12 @@ class Sqlmenu extends sql {
             
             case "datosUsuario":
                 $cadena_sql =" SELECT DISTINCT ";
-                $cadena_sql.=" id_usuario ID,";
-                $cadena_sql.=" nombre NOMBRE,";
-                $cadena_sql.=" apellido APELLIDO,";
-                $cadena_sql.=" correo CORREO,";
-                $cadena_sql.=" imagen IMAGEN";
+                $cadena_sql.=" id_usuario, ";
+                $cadena_sql.=" nombre ,";
+                $cadena_sql.=" apellido ,";
+                $cadena_sql.=" correo ,";
+                $cadena_sql.=" imagen ,";
+                $cadena_sql.=" estado ";
                 $cadena_sql.=" FROM ".$prefijo."usuario";
                 $cadena_sql.=" WHERE id_usuario='" . $variable . "' ";                
                 break;
@@ -91,8 +92,28 @@ class Sqlmenu extends sql {
                 $cadena_sql.=" gru.etiqueta,";
                 $cadena_sql.=" enl.etiqueta";
                 break;
-				
-        }
+            
+            case "RolesInactivos" :
+                $cadena_sql = "SELECT DISTINCT  ";
+                $cadena_sql.= " perfil.id_usuario usuario, ";
+                $cadena_sql.= " perfil.id_subsistema cod_app, ";
+                $cadena_sql.= " perfil.rol_id cod_rol, ";
+                $cadena_sql.= " rol.rol_alias rol, ";
+                $cadena_sql.= " perfil.fecha_caduca fecha_caduca, ";
+                $cadena_sql.= " perfil.estado estado ";
+                $cadena_sql.= " FROM ".$prefijo."usuario_subsistema perfil ";
+                $cadena_sql.= " INNER JOIN ".$prefijo."rol rol  ";
+                $cadena_sql.= " ON rol.rol_id=perfil.rol_id  ";
+                $cadena_sql.= " AND rol.estado_registro_id=1 ";
+                $cadena_sql.= " WHERE ";
+                $cadena_sql.= " id_usuario='" . $variable['id_usuario']  . "' ";
+                if(isset($variable['tipo']) && $variable['tipo']=='inactivo')
+                    {$cadena_sql.= " AND perfil.estado=0 ";}
+                if(isset($variable['tipo']) && $variable['tipo']=='caduco')
+                    {$cadena_sql.= " AND perfil.fecha_caduca < current_date ";}
+                
+                break;   
+            }
 
         return $cadena_sql;
     }

@@ -21,10 +21,10 @@ class Redireccionador {
                 $variable .= '&registro=' . $valor [0];
                 break;
 
-            case "indexCompras" :
+            case "claves" :
                 // echo "Bienvenido, perfil Compras";
-                $variable = 'pagina=indexCompras';
-                $variable .= '&registro=' . $valor [0];
+                $variable = 'pagina=cambiarClave';
+                $variable .= '&usuario=' . $valor [0]['id_usuario'];
                 break;
 
             case "indexContabilidad" :

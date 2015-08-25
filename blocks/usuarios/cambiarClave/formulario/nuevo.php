@@ -1,155 +1,72 @@
-<?php 
-
-if(!isset($GLOBALS["autorizado"])) {
-	include("../index.php");
-	exit;
+<?php
+if (! isset ( $GLOBALS ["autorizado"] )) {
+	include ("../index.php");
+	exit ();
 }
 /**
  * Este script está incluido en el método html de la clase Frontera.class.php.
- * 
- *  La ruta absoluta del bloque está definida en $this->ruta
+ *
+ * La ruta absoluta del bloque está definida en $this->ruta
  */
 
-$esteBloque=$this->miConfigurador->getVariableConfiguracion("esteBloque");
-$nombreFormulario=$esteBloque["nombre"];
+$esteBloque = $this->miConfigurador->getVariableConfiguracion ( "esteBloque" );
 
-$valorCodificado="pagina=cambiarClave";
-$valorCodificado.="&action=".$esteBloque["nombre"];
-$valorCodificado.="&opcion=cambiarClave";
-$valorCodificado.="&usuario=".isset($_REQUEST["usuario"]);
-$valorCodificado.="&bloque=".$esteBloque["id_bloque"];
-$valorCodificado.="&bloqueGrupo=".$esteBloque["grupo"];
-$valorCodificado=$this->miConfigurador->fabricaConexiones->crypto->codificar($valorCodificado);
+$nombreFormulario = $esteBloque ["nombre"];
 
-$tab=1;
+include_once ("core/crypto/Encriptador.class.php");
+$cripto = Encriptador::singleton ();
+$valorCodificado = "action=" . $esteBloque ["nombre"];
+$valorCodificado .= "&bloque=" . $esteBloque ["id_bloque"];
+$valorCodificado .= "&bloqueGrupo=" . $esteBloque ["grupo"];
+$valorCodificado = $cripto->codificar ( $valorCodificado );
+$directorio = $this->miConfigurador->getVariableConfiguracion ( "rutaUrlBloque" ) . "/imagen/";
 
-//---------------Inicio Formulario (<form>)--------------------------------
-$atributos["id"]=$nombreFormulario;
-$atributos["tipoFormulario"]="multipart/form-data";
-$atributos["metodo"]="POST";
-$atributos["nombreFormulario"]=$nombreFormulario;
-$verificarFormulario="1";
-echo $this->miFormulario->formulario("inicio",$atributos);
-unset($atributos);
+// ------------------Division para las pestañas-------------------------
+$atributos ["id"] = "tabs";
+$atributos ["estilo"] = "";
+echo $this->miFormulario->division ( "inicio", $atributos );
+// unset ( $atributos );
+{
+	// -------------------- Listado de Pestañas (Como lista No Ordenada) -------------------------------
+	
+	$items = array (
+			"tabClave" => $this->lenguaje->getCadena ( "tabClave" ),
+			//"tabRegistrarMasivo" => $this->lenguaje->getCadena ( "tabRegistrarMasivo" ) 
+	);
+	$atributos ["items"] = $items;
+	$atributos ["estilo"] = "jqueryui";
+	$atributos ["pestañas"] = "true";
+	echo $this->miFormulario->listaNoOrdenada ( $atributos );
+	// unset ( $atributos );
+	
+	$atributos ["id"] = "tabClave";
+	$atributos ["estilo"] = "";
+	echo $this->miFormulario->division ( "inicio", $atributos );
+	{switch ($_REQUEST ['opcion'])
+                {      case "cambiarClave":
+                                include ($this->ruta . "formulario/tabs/edita.php");
+                                break;
+                }
 
-//------------------Division para las pestañas-------------------------
-$atributos["id"]="tabs";
-$atributos["estilo"]="jqueryui";
-$atributos["estiloEnLinea"]="float:left;";
-echo $this->miFormulario->division("inicio",$atributos);
-unset($atributos);
+		// -----------------Fin Division para la pestaña 1-------------------------
+	}
+	echo $this->miFormulario->division ( "fin" );
+	
+	// ------------------Division para la pestaña 2-------------------------
+	
+        /*
+        $atributos ["id"] = "tabRegistrarMasivo";
+	$atributos ["estilo"] = "";
+	echo $this->miFormulario->division ( "inicio", $atributos );
+	{
+		include ($this->ruta . "formulario/tabs/registro_masivo.php");
+	}*/
+	
+	// -----------------Fin Division para la pestaña 2-------------------------
+	echo $this->miFormulario->division ( "fin" );
+	
+}
 
-//-------------------------------Mensaje-------------------------------------
-$esteCampo="mensajeCambiarClave";
-$atributos["id"]=$esteCampo;
-$atributos["obligatorio"]=false;
-$atributos["estilo"]="jqueryui";
-$atributos["etiqueta"]="simple";
-$atributos["mensaje"]=$this->lenguaje->getCadena($esteCampo);
-echo $this->miFormulario->campoMensaje($atributos);
-
-//-------------Control texto-----------------------
-$esteCampo="datosUsuario";
-$atributos["tamanno"]="";
-$atributos["estilo"]="jqueryui";
-$atributos["etiqueta"]="";
-$atributos["texto"]=$this->lenguaje->getCadena($esteCampo);
-$atributos["columnas"]=""; //El control ocupa 47% del tamaño del formulario
-echo $this->miFormulario->campoTexto($atributos);
-unset($atributos);
-
-//-------------Control cuadroTexto-----------------------
-$esteCampo="contrasenaActual";
-$atributos["id"]=$esteCampo;
-$atributos["etiqueta"]=$this->lenguaje->getCadena($esteCampo);
-$atributos["titulo"]=$this->lenguaje->getCadena($esteCampo."Titulo");
-$atributos["tabIndex"]=$tab++;
-$atributos["obligatorio"]=true;
-$atributos["tamanno"]="15";
-$atributos["ancho"] = 200;
-$atributos["anchoEtiqueta"] = 200;
-$atributos["tipo"]="password";
-$atributos["estilo"]="jqueryui";
-$atributos["validar"]="required, min[6]";
-$atributos["categoria"]="";
-echo $this->miFormulario->campoCuadroTexto($atributos);
-unset($atributos);
-
-//-------------Control cuadroTexto-----------------------
-$esteCampo="contrasena";
-$atributos["id"]=$esteCampo;
-$atributos["etiqueta"]=$this->lenguaje->getCadena($esteCampo);
-$atributos["titulo"]=$this->lenguaje->getCadena($esteCampo."Titulo");
-$atributos["tabIndex"]=$tab++;
-$atributos["obligatorio"]=true;
-$atributos["tamanno"]="15";
-$atributos["ancho"] = 200;
-$atributos["anchoEtiqueta"] = 200;
-$atributos["tipo"]="password";
-$atributos["estilo"]="jqueryui";
-$atributos["validar"]="required, min[6]";
-
-echo $this->miFormulario->campoCuadroTexto($atributos);
-unset($atributos);
-
-//-------------Control cuadroTexto-----------------------
-$esteCampo="contrasenaConfirm";
-$atributos["id"]=$esteCampo;
-$atributos["etiqueta"]=$this->lenguaje->getCadena($esteCampo);
-$atributos["titulo"]=$this->lenguaje->getCadena($esteCampo."Titulo");
-$atributos["tabIndex"]=$tab++;
-$atributos["obligatorio"]=true;
-$atributos["tamanno"]="15";
-$atributos["ancho"] = 200;
-$atributos["anchoEtiqueta"] = 200;
-$atributos["tipo"]="password";
-$atributos["estilo"]="jqueryui";
-$atributos["validar"]="required, min[6], equals[contrasena]";
-
-echo $this->miFormulario->campoCuadroTexto($atributos);
-unset($atributos);
-
-//----------------------Fin Conjunto de Controles--------------------------------------
-
-
-//------------------Division para los botones-------------------------
-$atributos["id"]="botones";
-$atributos["estilo"]="marcoBotones";
-echo $this->miFormulario->division("inicio",$atributos);
-
-//-------------Control Boton-----------------------
-$esteCampo="botonGuardar";
-$atributos["id"]=$esteCampo;
-$atributos["tabIndex"]=$tab++;
-$atributos["tipo"]="boton";
-$atributos["estilo"]="";
-$atributos["verificar"]="true"; //Se coloca true si se desea verificar el formulario antes de pasarlo al servidor.
-$atributos["tipoSubmit"]="jquery"; //Dejar vacio para un submit normal, en este caso se ejecuta la función submit declarada en ready.js
-$atributos["valor"]=$this->lenguaje->getCadena($esteCampo);
-$atributos["nombreFormulario"]=$nombreFormulario;
-echo $this->miFormulario->campoBoton($atributos);
-unset($atributos);
-//-------------Fin Control Boton----------------------
-
-//------------------Fin Division para los botones-------------------------
-echo $this->miFormulario->division("fin");
-
-//-------------Control cuadroTexto con campos ocultos-----------------------
-//Para pasar variables entre formularios o enviar datos para validar sesiones
-$atributos["id"]="formSaraData"; //No cambiar este nombre
-$atributos["tipo"]="hidden";
-$atributos["obligatorio"]=false;
-$atributos["etiqueta"]="";
-$atributos["valor"]=$valorCodificado;
-echo $this->miFormulario->campoCuadroTexto($atributos);
-unset($atributos);
-
-//------------------Fin Division para las pestañas-------------------------
-echo $this->miFormulario->division("fin");
-
-//Fin del Formulario
-echo $this->miFormulario->formulario("fin");
-
-
+echo $this->miFormulario->division ( "fin" );
 
 ?>

@@ -119,6 +119,7 @@
 	top: 0;
 	left: 0;
 	cursor: default;
+	z-index: 990;
 }
 .ui-button {
 	display: inline-block;
@@ -788,7 +789,7 @@ body .ui-tooltip {
 	font-size: 0.9em;
 }
 .ui-widget .ui-widget {
-	font-size: 1em;
+	font-size: 1.5em;
 }
 .ui-widget input,
 .ui-widget select,

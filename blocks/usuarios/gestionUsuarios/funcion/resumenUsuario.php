@@ -4,11 +4,17 @@ if (!isset($GLOBALS["autorizado"])) {
     include("index.php");
     exit;
 }	
+ob_end_clean();
 $ruta=$this->miConfigurador->getVariableConfiguracion('raizDocumento');
-include($ruta.'/classes/html2pdf/html2pdf.class.php');
+//include($ruta.'/core/classes/html2pdf/html2pdf.class.php');
+include($ruta.'/plugin/html2pdf/html2pdf.class.php');
 
 //$directorio=$this->miConfigurador->getVariableConfiguracion("rutaUrlBloque");
 $directorio=$this->miConfigurador->getVariableConfiguracion("rutaBloque");
+$aplicativo=$this->miConfigurador->getVariableConfiguracion("nombreAplicativo");
+$url = $this->miConfigurador->configuracion ["host"] . $this->miConfigurador->configuracion ["site"];
+$correo=$this->miConfigurador->getVariableConfiguracion("correoAdministrador");
+
 
 $contenidoPagina = "<page backtop='30mm' backbottom='10mm' backleft='20mm' backright='20mm'>";
 $contenidoPagina .= "<page_header>
@@ -22,7 +28,6 @@ $contenidoPagina .= "<page_header>
                     <br>
                     <font size='18px'><b>FRANCISCO JOS&Eacute; DE CALDAS</b></font>
                     <br>
-                    <font size='9px'><b>1948 - 2013 SESENTA Y CINCO A&Ntilde;OS DE VIDA UNIVERSITARIA</b></font>
                 </td>
                 <td align='center' >
                     <img src='".$directorio."css/images/sabio.jpg' width='60'>
@@ -45,7 +50,7 @@ $contenidoPagina .= "<page_header>
                     <br>
                     Carrera 8 N. 40-78 Piso 1 / PBX 3238400 - 3239300
                     <br>
-                    elecciones@udistrital.edu.co                    
+                    ".$correo."                    
                 </td>
             </tr>
         </table>
@@ -54,6 +59,9 @@ $contenidoPagina .= "<page_header>
     $contenidoPagina .= "
         <p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
 normal'><span style='font-size:18.0pt;mso-bidi-font-size:11.0pt;line-height:
+107%'>".$aplicativo."</span></b></p>
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:14.0pt;mso-bidi-font-size:11.0pt;line-height:
 107%'>REGISTRO DE USUARIO EXITOSO</span></b></p>
 
 <p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
@@ -145,7 +153,7 @@ mso-bidi-font-size:11.0pt;line-height:107%'> &nbsp; </span></p>
   mso-bidi-font-size:11.0pt'>".$_REQUEST['correo']."</span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:4;mso-yfti-lastrow:yes'>
+ <tr style='mso-yfti-irow:4'>
   <td width=123 valign=top style='width:92.1pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   background:#BDD6EE;mso-background-themecolor:accent1;mso-background-themetint:
@@ -161,6 +169,24 @@ mso-bidi-font-size:11.0pt;line-height:107%'> &nbsp; </span></p>
   <p class=MsoNormal align=center style='margin-bottom:0cm;margin-bottom:.0001pt;
   text-align:center;line-height:normal'><span style='font-size:12.0pt;
   mso-bidi-font-size:11.0pt'>".$_REQUEST['telefono']."</span></p>
+  </td>
+ </tr>
+<tr style='mso-yfti-irow:5;mso-yfti-lastrow:yes'>
+  <td width=123 valign=top style='width:92.1pt;border:solid windowtext 1.0pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
+  background:#BDD6EE;mso-background-themecolor:accent1;mso-background-themetint:
+  102;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+  normal'><b style='mso-bidi-font-weight:normal'><span style='font-size:12.0pt;
+  mso-bidi-font-size:11.0pt'>Perfil </span></b></p>
+  </td>
+  <td width=236 valign=top style='width:177.25pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  mso-border-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0cm;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><span style='font-size:12.0pt;
+  mso-bidi-font-size:11.0pt'>".$_REQUEST['perfilUs']."</span></p>
   </td>
  </tr>
 </table>
@@ -185,14 +211,32 @@ normal'><span style='font-size:18.0pt;mso-bidi-font-size:11.0pt;line-height:
   accent1;mso-background-themetint:102;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
   normal'><b style='mso-bidi-font-weight:normal'><span style='font-size:12.0pt;
-  mso-bidi-font-size:11.0pt'>Usuario  </span></b></p>
+  mso-bidi-font-size:11.0pt'>Dirección </span></b></p>
   </td>
   <td width=236 valign=top style='width:177.25pt;border:solid windowtext 1.0pt;
   border-left:none;mso-border-left-alt:solid windowtext .5pt;mso-border-alt:
   solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal align=center style='margin-bottom:0cm;margin-bottom:.0001pt;
   text-align:center;line-height:normal'><span style='font-size:12.0pt;
-  mso-bidi-font-size:11.0pt'>".$_REQUEST['identificacion']."</span></p>
+  mso-bidi-font-size:11.0pt'>".$url."</span></p>
+  </td>
+ </tr>
+  <tr style='mso-yfti-irow:3'>
+  <td width=123 valign=top style='width:92.1pt;border:solid windowtext 1.0pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
+  background:#BDD6EE;mso-background-themecolor:accent1;mso-background-themetint:
+  102;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+  normal'><b style='mso-bidi-font-weight:normal'><span style='font-size:12.0pt;
+  mso-bidi-font-size:11.0pt'>Usuario </span></b></p>
+  </td>
+  <td width=236 valign=top style='width:177.25pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  mso-border-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0cm;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><span style='font-size:12.0pt;
+  mso-bidi-font-size:11.0pt'>".$_REQUEST['id_usuario']."</span></p>
   </td>
  </tr>
  <tr style='mso-yfti-irow:1;mso-yfti-lastrow:yes'>
