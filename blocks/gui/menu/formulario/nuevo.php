@@ -56,19 +56,30 @@ if($reg_menu)
                { $host=$reg_menu[$key]['url_host_enlace'];}
          else  { $host=$directorio;}      
 
-         $enlaceServ['URL']="pagina=" .$reg_menu[$key]['pagina_enlace'];
-         $enlaceServ['URL'].= "&usuario=" . $id_usuario;      
-         $enlaceServ['URL'].=$reg_menu[$key]['parametros'];
-         $enlaceServ['urlCodificada'] = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($enlaceServ['URL'], $host);   
-
-         $mMenu[$reg_menu[$key]['menu']][$reg_menu[$key]['grupo']][$reg_menu[$key]['enlace']]=array('urlCodificada'=>$enlaceServ['urlCodificada']);    
+         if(isset($reg_menu[$key]['pagina_enlace']) && $reg_menu[$key]['pagina_enlace']!='')
+               {  $enlaceServ['URL']="pagina=" .$reg_menu[$key]['pagina_enlace'];
+                  $enlaceServ['URL'].= "&usuario=" . $id_usuario;      
+                  $enlaceServ['URL'].=$reg_menu[$key]['parametros'];
+                  $enlaceServ['urlCodificada'] = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($enlaceServ['URL'], $host);   
+                  $enlaceServ['tab']='';
+               }
+         else  { 
+                  $enlaceServ['urlCodificada'] = $host.$reg_menu[$key]['parametros']; 
+                  $enlaceServ['tab']=$reg_menu[$key]['enlace'];
+               }      
+         
+         $mMenu[$reg_menu[$key]['menu']][$reg_menu[$key]['grupo']][$reg_menu[$key]['enlace']]=array('urlCodificada'=>$enlaceServ['urlCodificada'],'tab'=>$enlaceServ['tab']);    
          unset($enlaceServ);
 
         }
     }
 $parametros['id_usuario']=$id_usuario;    
-$parametros['tipo']='inactivo';    
+$parametros['tipo']='activo';    
+$cadena_act = $miSql->getCadenaSql("RolesInactivos", $parametros);
+$rolAct = $esteRecursoDB->ejecutarAcceso($cadena_act, "busqueda");
+unset($parametros['tipo']);
 
+$parametros['tipo']='inactivo';    
 $cadena_sql = $miSql->getCadenaSql("RolesInactivos", $parametros);
 //$rolOut = $esteRecursoDB->ejecutarAcceso($cadena_sql, "busqueda");
 unset($parametros['tipo']);
@@ -119,9 +130,14 @@ $enlaceFinSesion['nombre'] = "Cerrar Sesión";
                               <h4><?php echo $gkey;?></h4>
                                 <ul>
                             <?php foreach ($grupos as $skey => $service) 
-                                    { ?>
-                                     <li><a href="<?php echo $grupos[$skey]['urlCodificada'] ?>"><?php echo $skey ?></a></li>
-                            <?php   } ?>                                 
+                                    { if(isset($grupos[$skey]['tab']) && $grupos[$skey]['tab']!='')
+                                          {?>
+                                           <li><a href="#" onclick=javascript:window.open('<?php echo $grupos[$skey]['urlCodificada'] ?>','<?php echo $grupos[$skey]['tab'] ?>','resizable','status','menubar','width=850','height=400','scrollbars') ><?php echo $skey; ?></a></li>
+                            <?php         }
+                                      else{?>
+                                          <li><a href="<?php echo $grupos[$skey]['urlCodificada'] ?>"><?php echo $skey; ?></a></li>
+                            <?php         }
+                                    } ?>                                 
                                 </ul>
                             </div>
                   <?php } ?>
@@ -141,15 +157,15 @@ $enlaceFinSesion['nombre'] = "Cerrar Sesión";
                                 <li><a href="<?php echo $enlaceFinSesion['urlCodificada'] ?>"><?php echo ($enlaceFinSesion['nombre']) ?></a></li>
                             </ul>
                         </div>
-                <?php             
-                    if(isset($roles) && is_array($roles) )
-                        {?>                        
+                <?php                  
+                    if(isset($rolAct) && is_array($rolAct) )
+                       {?>                        
                         <div>
                             <h4>Perfiles Activos</h4>
                             <ul><?php
-                                    foreach ($roles as $value) {
+                                    foreach ($rolAct as $valueAct) {
                                         ?>
-                                        <li><a href="#"><?php echo $value['rol'] ?></a></li>    
+                                        <li><a href="#"><?php echo $valueAct['rol'] ?></a></li>    
                                         <?php
                                     }
                                 ?>
@@ -179,7 +195,7 @@ $enlaceFinSesion['nombre'] = "Cerrar Sesión";
                             <ul><?php
                                     foreach ($rolCad as $valueCad) {
                                         ?>
-                                        <li><a href="#"><?php echo $valueCad['rol']." - ".$valueCad['fecha_caduca'] ?></a></li>    
+                                        <li><a href="#"><?php echo $valueCad['rol']." (".$valueCad['app'].") ".$valueCad['fecha_caduca'] ?></a></li>    
                                         <?php
                                     }
                                 ?>

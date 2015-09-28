@@ -26,19 +26,19 @@ $this->idioma["marcoUsuario"]="Nuevo Usuario";
 
 $this->idioma["marcoEditaUsuario"]="Editar Datos de Usuario";
 
-$this->idioma["tabPerfil"]="Perfiles";
+$this->idioma["tabPerfil"]="Roles";
 
-$this->idioma["marcoPerfil"]="Nuevo Perfil de Usuario";
+$this->idioma["marcoPerfil"]="Nuevo Rol de Usuario";
 
-$this->idioma["marcoEditaPerfil"]="Editar Perfil de Usuario";
+$this->idioma["marcoEditaPerfil"]="Editar Rol de Usuario";
 
 $this->idioma["nuevoUsuario"]="<br><b>Registrar Usuario</b>";
 
-$this->idioma["nuevoPerfil"]="<br><b>Registrar Nuevo <br> Perfil</b>";
+$this->idioma["nuevoPerfil"]="<br><b>Registrar Nuevo <br> Rol</b>";
 
-$this->idioma["inhabilitarPerfil"]="Inhabilitar Perfil de Usuario";
+$this->idioma["inhabilitarPerfil"]="Inhabilitar Rol de Usuario";
 
-$this->idioma["habilitarPerfil"]="Habilitar Perfil de Usuario";
+$this->idioma["habilitarPerfil"]="Habilitar Rol de Usuario";
 
 $this->idioma["tabUsuarioEditar"]="Editar Usuario";
 
@@ -88,7 +88,7 @@ $this->idioma["subsistema"]="Módulo";
 
 $this->idioma["subsistemaTitulo"]="Seleccione el Módulo ";
 
-$this->idioma["perfil"]="Perfil Usuario"; 
+$this->idioma["perfil"]="Rol de Usuario"; 
 
 $this->idioma["fechaFin"]="Fecha Caducidad"; 
 

@@ -5644,21 +5644,23 @@ function set_project_environment($initial_project = false, $project_folder = "pr
 	if ( $configfile )
 	{
 		if ( !is_file($configfile) )
-        {
-			handle_error("Config file $menufile not found in project $project", E_USER_WARNING);
-        }
+                    {
+                                    handle_error("Config file $menufile not found in project $project", E_USER_WARNING);
+                    }
 
-        if ( $g_included_config && $g_included_config != $configfile )
-	        handle_error("Cannot load two different instances on a single page from different projects.", E_USER_ERROR);
-        else
-        {
-		    include_once($configfile);
-            $g_included_config = $configfile;
-        }
+                if ( $g_included_config && $g_included_config != $configfile )
+                        handle_error("Cannot load two different instances on a single page from different projects.", E_USER_ERROR);
+                    else
+                    {
+                                include_once($configfile);
+                        $g_included_config = $configfile;
+                    }
 
-		if ( is_file($menufile)  && $this->access_mode!='ONEREPORT' )
+               $acceso=get_reportico_session_param("access_mode");
+        
+		if ( is_file($menufile)  && ($acceso!='' && $acceso!='ONEREPORT') )
 			include($menufile);
-		elseif ($this->access_mode!='ONEREPORT' )
+		elseif ($acceso!='' && $acceso!='ONEREPORT' )
 			handle_error("Menu Definition file $menufile not found in project $project", E_USER_WARNING);
 
 	}

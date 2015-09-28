@@ -37,8 +37,9 @@ class Sql extends \Sql {
 			break;
                     
                         case "consultarUsuarios":
-                                
-				$cadenaSql = "SELECT usu.id_usuario, ";
+                            
+				$cadenaSql = "SELECT DISTINCT ";
+                            	$cadenaSql .= " usu.id_usuario, ";
                             	$cadenaSql .= "usu.nombre, ";
                             	$cadenaSql .= "usu.apellido, ";
                                 $cadenaSql .= " usu.correo, ";
@@ -56,6 +57,10 @@ class Sql extends \Sql {
                                 $cadenaSql .= "INNER JOIN ".$prefijo."tipo_identificacion tiden ";
                                 $cadenaSql .= "ON tiden.tipo_identificacion=usu.tipo_identificacion ";
                                 
+                                if(isset($variable['tipoAdm']) && $variable['tipoAdm']=='subsistema')
+                                    {  $cadenaSql .= "INNER JOIN ".$prefijo."usuario_subsistema mod ON mod.id_usuario=usu.id_usuario ";
+                                       $cadenaSql .= " AND mod.rol_id NOT IN (0) "; 
+                                    }
                                 if(isset($variable['identificacion']) && $variable['identificacion']>0)
                                     { $cadenaSql .= " WHERE ";
                                       $cadenaSql .= " usu.identificacion='".$variable['identificacion']."'"; 
@@ -70,13 +75,20 @@ class Sql extends \Sql {
                         
                         case "consultarPerfilUsuario":
 
-                            	$cadenaSql = "SELECT sist.id_usuario,  ";
-                            	$cadenaSql .= "sist.id_subsistema, ";
-                            	$cadenaSql .= "mod.etiketa subsistema, ";
+                            	$cadenaSql = "SELECT DISTINCT ";
+                            	$cadenaSql .= " sist.id_usuario,  ";
+                            	if(!isset($variable['tipo']))
+                                    { $cadenaSql .= "sist.id_subsistema, ";
+                                      $cadenaSql .= "mod.etiketa subsistema, ";
+                                      $cadenaSql .= "sist.fecha_registro,  ";
+                            	      $cadenaSql .= "sist.fecha_caduca,  ";
+                                    }
+                                //$cadenaSql .= "sist.id_subsistema, ";
+                            	//$cadenaSql .= "mod.etiketa subsistema, ";
                             	$cadenaSql .= "sist.rol_id, ";
                             	$cadenaSql .= "rol.rol_alias , ";
-                            	$cadenaSql .= "sist.fecha_registro,  ";
-                            	$cadenaSql .= "sist.fecha_caduca,  ";
+                            	//$cadenaSql .= "sist.fecha_registro,  ";
+                            	//$cadenaSql .= "sist.fecha_caduca,  ";
                             	$cadenaSql .= "est.estado_registro_alias estado  ";
                             	$cadenaSql .= "FROM ".$prefijo."usuario_subsistema sist ";
                             	$cadenaSql .= "INNER JOIN ".$prefijo."subsistema mod ON mod.id_subsistema=sist.id_subsistema ";
@@ -84,8 +96,13 @@ class Sql extends \Sql {
                                 $cadenaSql .= "INNER JOIN ".$prefijo."estado_registro est ";
                                 $cadenaSql .= "ON est.estado_registro_id=sist.estado ";
                             	$cadenaSql .= "WHERE sist.id_usuario='".$variable['id_usuario']."'";
+                                if(isset($variable['subsistema']) && $variable['subsistema']>0)
+                                      { $cadenaSql .= " AND ";
+                                        $cadenaSql .= " sist.id_subsistema='".$variable['subsistema']."' "; }
                                   if(isset($variable['rol_id']))
                                       {$cadenaSql .= " AND rol.rol_id ='".$variable['rol_id']."'"; }
+                                  if(isset($variable['tipo']) && $variable['tipo']=='unico')
+                                        {$cadenaSql.= " AND sist.estado=1 "; }    
                                 $cadenaSql .= " ORDER BY rol.rol_alias";
 			break;
                     
@@ -134,10 +151,12 @@ class Sql extends \Sql {
                                             }
                                       $cadenaSql .= " ) ";
                                     }
-                                elseif($tam==1)
+                                elseif($tam==1 && $variable[0]==1 )
                                     { $cadenaSql .= " > 0 ";
                                     }
-                                $cadenaSql .= "ORDER BY  etiketa ";
+                                else{ $cadenaSql .= " = ".$variable[0];
+                                    }    
+                               $cadenaSql .= " ORDER BY  etiketa ";
                                 
                             break;
 
@@ -147,9 +166,11 @@ class Sql extends \Sql {
                                 $cadenaSql .= "  FROM ".$prefijo."rol rol ";
                                     $cadenaSql .= "INNER JOIN  ".$prefijo."rol_subsistema sub  ";
                                     $cadenaSql .= "ON rol.\"rol_id\"=sub.\"rol_id\"  ";
-                                    $cadenaSql .= "AND rol.estado_registro_id='1' ";
+                                $cadenaSql .= " WHERE ";
+                                $cadenaSql .= "sub.estado='1' ";
+                                    
                             if(isset($variable['subsistema']) && $variable['subsistema']>0)
-                                { $cadenaSql .= " WHERE ";
+                                { $cadenaSql .= " AND ";
                                   $cadenaSql .= " sub.id_subsistema='".$variable['subsistema']."' "; 
                                   if(isset($variable['roles']))
                                       {$cadenaSql .= " AND rol.rol_id NOT IN (".$variable['roles'].")"; 

@@ -132,16 +132,19 @@
 
             // Page Headers for TCPDF driver ( this is the default )
             if ( $reportico->pdf_engine == "tcpdf" )
-            {
+            {   
+                $param=get_reportico_session_param("user_parameters");
+                $user=isset($param['User'])?$param['User']." en ":'';
                 // Create Report Title Page Header on every page of PDF
-                $reportico->create_page_header("H1", 1, "{REPORT_TITLE}{STYLE border-width: 1 0 1 0; margin: 15px 0px 0px 0px; border-color: #000000; font-size: 18; border-style: solid;padding:5px 0px 5px 0px; height:1cm; background-color: #000000; color: #ffffff; text-align: center}" );
+                //$reportico->create_page_header("H1", 1, "{REPORT_TITLE}{STYLE border-width: 1 0 1 0; margin: 15px 0px 0px 0px; border-color: #000000; font-size: 18; border-style: solid;padding:5px 0px 5px 0px; height:1cm; background-color: #000000; color: #ffffff; text-align: center}" );
+                $reportico->create_page_header("H1", 1, "{REPORT_TITLE}{STYLE font-size: 15; padding:5px 0px 5px 0px; color: #000000; text-align: center}" );
                 $reportico->set_page_header_attribute("H1", "ShowInHTML", "no" );
-                $reportico->set_page_header_attribute("H1", "ShowInPDF", "no" );
+                $reportico->set_page_header_attribute("H1", "ShowInPDF", "yes" );
                 $reportico->set_page_header_attribute("H1", "justify", "center" );
 
                 // Create Image on every page of PDF
                 
-                $reportico->create_page_header("H2", 1, "{STYLE width: 48; height: 60; margin: 0 0 0 0; background-color: #003333; background-image:images/UD_logo2.png;}" );
+                $reportico->create_page_header("H2", 1, "{STYLE width: 60; height: 60; margin: 0 0 0 0; background-color: #003333; background-image:images/udNombre.png;}" );
                 $reportico->set_page_header_attribute("H2", "ShowInHTML", "no" );
                 $reportico->set_page_header_attribute("H2", "ShowInPDF", "yes" );
                 
@@ -152,18 +155,25 @@
                 $reportico->set_page_header_attribute("H3", "justify", "right" );
 
                 // Create Page No on bottom of PDF page
-                $reportico->create_page_footer("F1", 2, "Impreso por: Sistema Tike {STYLE border-width: 1 0 0 0; margin: 40 0 0 0; font-size: 8; text-align: left; font-style: italic; }" );
+                $reportico->create_page_footer("F1", 2, "Impreso por: ".$user." Sistema de Gestión Financiera - TIKE {STYLE border-width: 1 0 0 0; margin: 40 0 0 0; font-size: 8; text-align: left; font-style: italic; }" );
                 $reportico->create_page_footer("F2", 2, "Página: {PAGE}{STYLE border-width: 1 0 0 0; margin: 40 0 0 0; font-style: italic; }" );
                 $reportico->create_page_footer("F3", 2, "Fuente de datos: Sistema Sicapital {STYLE border-width: 1 0 0 0; margin: 40 0 0 0; font-size: 8; text-align: right; font-style: italic; }" );
             }
             else   // FPDF page headers
             {
                 // Create Report Title Page Header on every page of PDF
-                $reportico->create_page_header("H1", 2, "{REPORT_TITLE}{STYLE border-width: 1 0 1 0; margin: 15px 0px 0px 0px; border-color: #000000; font-size: 18; border-style: solid;padding:5px 0px 5px 0px; height:1cm; background-color: #000000; color: #ffffff}" );
+                //$reportico->create_page_header("H1", 2, "{REPORT_TITLE}{STYLE border-width: 1 0 1 0; margin: 15px 0px 0px 0px; border-color: #000000; font-size: 18; border-style: solid;padding:5px 0px 5px 0px; height:1cm; background-color: #000000; color: #ffffff}" );
+                $reportico->create_page_header("H1", 1, "{REPORT_TITLE}{STYLE font-size: 15; padding:5px 0px 5px 0px; color: #000000; text-align: center}" );
                 $reportico->set_page_header_attribute("H1", "ShowInHTML", "no" );
                 $reportico->set_page_header_attribute("H1", "ShowInPDF", "no" );
                 $reportico->set_page_header_attribute("H1", "justify", "center" );
 
+                // Create Image on every page of PDF
+                
+                $reportico->create_page_header("H2", 1, "{STYLE width: 60; height: 60; margin: 0 0 0 0; background-color: #003333; background-image:images/udNombre.png;}" );
+                $reportico->set_page_header_attribute("H2", "ShowInHTML", "no" );
+                $reportico->set_page_header_attribute("H2", "ShowInPDF", "yes" );                
+                
                 // Create Image on every page of PDF
                 $reportico->create_page_header("H3", 1, "Fecha: date('Y-m-d H:i:s'){STYLE font-size: 10; text-align: right; font-style: italic; }" );
                 $reportico->set_page_header_attribute("H3", "ShowInHTML", "no" );
@@ -171,7 +181,7 @@
                 $reportico->set_page_header_attribute("H3", "justify", "right" );
 
                 // Create Page No on bottom of PDF page
-                $reportico->create_page_footer("F1", 1, "Impreso por: Sistema Tike {STYLE font-size: 8; text-align: left; font-style: italic; }" );
+                $reportico->create_page_footer("F1", 1, "Impreso por: Sistema de Gestión Financiera - TIKE {STYLE font-size: 8; text-align: left; font-style: italic; }" );
                 $reportico->create_page_footer("F2", 1, "Pag: {PAGE}{STYLE border-width: 1 0 0 0; margin: 40 0 0 0; font-style: italic; }" );
                 $reportico->create_page_footer("F3", 1, "Fuente de datos: Sistema Sicapital {STYLE border-width: 1 0 0 0; margin: 40 0 0 0; font-size: 8; text-align: right; font-style: italic; }" );
 

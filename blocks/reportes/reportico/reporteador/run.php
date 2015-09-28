@@ -197,6 +197,7 @@
     // For passing external user parameters, can be referenced in SQL with {USER_PARAM,parameter_name}
     // and can be referenced in custom SQL with $this->user_parameters
     //$q->user_parameters["your_parameter_name"] = "your parameter value";
+    $q->user_parameters["User"] = isset($_REQUEST['User'])?$_REQUEST['User']:'';
 
     // Jquery already included?
     //$q->jquery_preloaded = false;

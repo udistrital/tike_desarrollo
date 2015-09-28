@@ -1,5 +1,11 @@
 <?php
 ?>
+function abrir_ventana(url,nombre)
+{
+	
+	var ventana=window.open(url,nombre,"resizable,status,menubar,width=850,height=400,scrollbars");
+	return ventana;
+}
 
 $(function() {
 				cbpHorizontalMenu.init();

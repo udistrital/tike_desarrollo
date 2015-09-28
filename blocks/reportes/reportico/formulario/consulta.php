@@ -51,10 +51,20 @@ class consulta {
     function miForm() {
         // Rescatar los datos de este bloque
         $esteBloque = $this->miConfigurador->getVariableConfiguracion("esteBloque");
-
+        $conexion="estructura";
+	$esteRecursoDB = $this->miConfigurador->fabricaConexiones->getRecursoDB ( $conexion );
+	
+        $miSesion = \Sesion::singleton();
+        //identifca lo roles para la busqueda de subsistemas
+        $User=$miSesion->idUsuario();
+        $parametro=array('id_usuario'=>$User);
+        $cadena_sql = $this->miSql->getCadenaSql("consultarUsuarios", $parametro);
+        $resultadoUsuarios = $esteRecursoDB->ejecutarAcceso($cadena_sql, "busqueda");
+        
         $ruta= $this->miConfigurador->getVariableConfiguracion ( "host" ) . $this->miConfigurador->getVariableConfiguracion ( "site" );
         $reporte='/blocks/reportes/reportico/reporteador/./run.php?';
-        $reporte.="informes=".$_REQUEST['informes'];
+        $reporte.="User=".$resultadoUsuarios[0]['nombre']." ".$resultadoUsuarios[0]['apellido'];
+        $reporte.="&informes=".$_REQUEST['informes'];
         $reporte.="&acceso=".$_REQUEST['acceso'];
         isset($_REQUEST['reporte'])?$reporte.="&reporte=".$_REQUEST['reporte']:'';
         ?>

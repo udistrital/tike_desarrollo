@@ -100,7 +100,7 @@ class consultarForm {
                 $atributos ['id'] = $esteCampo;
                 $atributos ["estilo"] = "jqueryui";
                 $atributos ['tipoEtiqueta'] = 'inicio';
-                $atributos ["leyenda"] = "Perfiles de Usuario";
+                $atributos ["leyenda"] = "Roles de Usuario";
                 echo $this->miFormulario->marcoAgrupacion ( 'inicio', $atributos );
                 unset ( $atributos );
                 {	
@@ -204,10 +204,29 @@ class consultarForm {
                         unset ( $atributos );
                         // ---------------- FIN CONTROL: Cuadro de Texto --------------------------------------------------------
                  /*Fin resumen ***/
- 
+
+            //identifca lo roles para la busqueda de subsistemas
+            $roles=  $this->miSesion->RolesSesion();
+            $aux=0;
+            foreach ($roles as $key => $value) {
+                    if($roles[$key]['cod_rol']==1 && $roles[$key]['cod_app']>1)
+                        {$app[$aux]=$roles[$key]['cod_app'];
+                         $rol[$aux]=$roles[$key]['cod_rol'];
+                         $aux++;
+                         $parametro['tipoAdm']='subsistema';
+                        }
+                    elseif($roles[$key]['cod_rol']==0 && $roles[$key]['cod_app']==1)
+                        {$app='';
+                         $app[0]=$roles[$key]['cod_app'];
+                         $rol[0]=$roles[$key]['cod_rol'];
+                         $parametro['tipoAdm']='general';
+                         break;
+                        }      
+                }                        
+                        
             $cadena_sql = $this->miSql->getCadenaSql("consultarPerfilUsuario", $parametro);
             $resultadoPerfil = $esteRecursoDB->ejecutarAcceso($cadena_sql, "busqueda");
-            
+            //var_dump($resultadoPerfil);
             if($resultadoPerfil)
             {	
                 //-----------------Inicio de Conjunto de Controles----------------------------------------
@@ -222,7 +241,7 @@ class consultarForm {
                     echo "<thead>
                             <tr align='center'>
                                 <th>Subsistema</th>
-                                <th>Perfil</th>
+                                <th>Rol</th>
                                 <th>Fecha Registro</th>
                                 <th>Fecha Caduca</th>                    
                                 <th>Estado</th>
@@ -233,7 +252,13 @@ class consultarForm {
                         <tbody>";
 
                     foreach($resultadoPerfil as $key=>$value )
-                        { 
+                        {   $cambio='SI';
+                            //deshabilita privilegios de otros subsistemas 
+                            if($resultadoPerfil[$key]['rol_id']==0 && $rol[0]!=0)
+                                {$cambio='NO';} 
+                            elseif ( in_array(1, $rol) && !in_array($resultadoPerfil[$key]['id_subsistema'], $app))
+                                {$cambio='NO';}
+                                
                             $variableEditar = "pagina=gestionUsuarios"; //pendiente la pagina para modificar parametro                                                        
                             $variableEditar.= "&opcion=editarPerfil";
                             $variableEditar.= "&usuario=" . $this->miSesion->getSesionUsuarioId();
@@ -267,6 +292,8 @@ class consultarForm {
                                     <td align='left'>".$resultadoPerfil[$key]['fecha_caduca']."</td>
                                     <td>".$resultadoPerfil[$key]['estado']."</td>    
                                     <td>";
+                                        if($cambio=='SI')
+                                            {
                                                 //-------------Enlace-----------------------
                                             $esteCampo = "editar";
                                             $atributos["id"]=$esteCampo;
@@ -279,12 +306,13 @@ class consultarForm {
                                             $atributos['alto']='25';
                                             $atributos['enlaceImagen']=$rutaBloque."/images/edit.png";
                                             $mostrarHtml .= $this->miFormulario->enlace($atributos);
-                                            unset($atributos);    
+                                            unset($atributos);
+                                            }
                             $mostrarHtml .= "</td>
                                             <td>";
 
-                                    if($resultadoPerfil[$key]['estado']=='Activo')
-                                        {                                 $esteCampo = "habilitar";
+                                    if($resultadoPerfil[$key]['estado']=='Activo' && $cambio=='SI')
+                                        {   $esteCampo = "habilitar";
                                             $atributos["id"]=$esteCampo;
                                             $atributos['enlace']=$variableEstado;
                                             $atributos['tabIndex']=$esteCampo;
@@ -297,7 +325,8 @@ class consultarForm {
                                             $mostrarHtml .= $this->miFormulario->enlace($atributos);
                                             unset($atributos);    
                                         }
-                                    else{
+                                    elseif($resultadoPerfil[$key]['estado']!='Activo' && $cambio=='SI')
+                                        {
                                                 //-------------Enlace-----------------------
                                             $esteCampo = "habilitar";
                                             $atributos["id"]=$esteCampo;

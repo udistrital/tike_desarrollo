@@ -69,9 +69,27 @@ class consultarForm {
 		$valorCodificado .= "&campoSeguro=" . $_REQUEST ['tiempo'];
 		$valorCodificado .= "&tiempo=" . time ();
 		// Paso 2: codificar la cadena resultante
-                 $variableNuevo = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($valorCodificado, $directorio);
+                $variableNuevo = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($valorCodificado, $directorio);
 		
-                $cadena_sql = $this->miSql->getCadenaSql("consultarUsuarios", "");
+                //identifca lo roles para la busqueda de subsistemas
+                $roles=  $this->miSesion->RolesSesion();
+                $aux=0;
+                foreach ($roles as $key => $value) {
+                    if($roles[$key]['cod_rol']==1 && $roles[$key]['cod_app']>1)
+                        {$app[$aux]=$roles[$key]['cod_app'];
+                         $rol[$aux]=$roles[$key]['cod_rol'];
+                         $aux++;
+                         $parametro['tipoAdm']='subsistema';
+                        }
+                    elseif($roles[$key]['cod_rol']==0 && $roles[$key]['cod_app']==1)
+                        {$app='';
+                         $app[0]=$roles[$key]['cod_app'];
+                         $rol[0]=$roles[$key]['cod_rol'];
+                         $parametro['tipoAdm']='general';
+                         break;
+                        }      
+                }
+                $cadena_sql = $this->miSql->getCadenaSql("consultarUsuarios", $parametro);
                 $resultadoUsuarios = $esteRecursoDB->ejecutarAcceso($cadena_sql, "busqueda");
  
             $esteCampo = "marcoDatosBasicos";
@@ -123,11 +141,11 @@ class consultarForm {
                                     <th>Correo</th>
                                     <th>Teléfono</th>
                                     <th>Usuario</th>
-                                    <th>Perfil</th>
+                                    <th>Roles</th>
                                     <th>Estado</th>
                                     <th>Tipo Usuario</th>
                                     <th>Editar</th>
-                                    <th>Actualizar Perfil</th>
+                                    <th>Actualizar Roles</th>
                                     <th>Actualizar Estado</th>
                                     <th>Eliminar</th>
                                 </tr>
@@ -137,14 +155,18 @@ class consultarForm {
                         foreach($resultadoUsuarios as $key=>$value )
                             { 
                                 $parametro['id_usuario']=$resultadoUsuarios[$key]['id_usuario'];
+                                $parametro['tipo']='unico';
                                 $cadena_sql = $this->miSql->getCadenaSql("consultarPerfilUsuario", $parametro);
                                 $resultadoPerfil = $esteRecursoDB->ejecutarAcceso($cadena_sql, "busqueda");
                                 //var_dump($resultadoPerfil);
                                 $perfil[$key]['perfil']='';
                                 if($resultadoPerfil)
-                                    {
+                                    {$cambio='SI';
                                         foreach ($resultadoPerfil as $Pkey => $value) {
                                            $perfil[$key]['perfil'].=$resultadoPerfil[$Pkey]['rol_alias']."<br>";
+                                           if($resultadoPerfil[$Pkey]['rol_id']==0 && $rol[0]!=0)
+                                               {$cambio='NO';}
+                                           
                                         }
                                     }
                                 else{$perfil[$key]['perfil']='N/A';}
@@ -185,12 +207,12 @@ class consultarForm {
                                 $mostrarHtml = "<tr align='center'>
                                         <td align='left'>".$resultadoUsuarios[$key]['identificacion']."</td>
                                         <td align='left'>".$resultadoUsuarios[$key]['tipo_nombre']."</td>
-                                        <td align='left'>".$resultadoUsuarios[$key]['nombre']."</td>
-                                        <td align='left'>".$resultadoUsuarios[$key]['apellido']."</td>
+                                        <td align='left' width='8%'>".$resultadoUsuarios[$key]['nombre']."</td>
+                                        <td align='left' width='8%'>".$resultadoUsuarios[$key]['apellido']."</td>
                                         <td align='left'>".$resultadoUsuarios[$key]['correo']."</td>
                                         <td align='left'>".$resultadoUsuarios[$key]['telefono']."</td>
                                         <td align='left'>".$resultadoUsuarios[$key]['id_usuario']."</td>
-                                        <td align='left'>".$perfil[$key]['perfil']."</td>
+                                        <td align='left' width='12%'>".$perfil[$key]['perfil']."</td>
                                         <td>".$resultadoUsuarios[$key]['estado']."</td>    
                                         <td>".$resultadoUsuarios[$key]['nivel']."</td>
                                         <td>";
@@ -224,8 +246,8 @@ class consultarForm {
                                 $mostrarHtml .= "</td>
                                                 <td>";
 
-                                        if($resultadoUsuarios[$key]['estado']=='Activo')
-                                            {                                 $esteCampo = "habilitar";
+                                        if($resultadoUsuarios[$key]['estado']=='Activo' && $cambio=='SI')
+                                            {   $esteCampo = "habilitar";
                                                 $atributos["id"]=$esteCampo;
                                                 $atributos['enlace']=$variableEstado;
                                                 $atributos['tabIndex']=$esteCampo;
@@ -238,7 +260,8 @@ class consultarForm {
                                                 $mostrarHtml .= $this->miFormulario->enlace($atributos);
                                                 unset($atributos);    
                                             }
-                                        else{
+                                        elseif($resultadoUsuarios[$key]['estado']!='Activo' && $cambio=='SI')
+                                            {
                                                     //-------------Enlace-----------------------
                                                 $esteCampo = "habilitar";
                                                 $atributos["id"]=$esteCampo;
@@ -255,7 +278,9 @@ class consultarForm {
                                             }    
 
                                $mostrarHtml .= "</td><td>";
-                                                $esteCampo = "perfil";
+                                        if($cambio=='SI')
+                                            {    
+                                                $esteCampo = "borrar";
                                                 $atributos["id"]=$esteCampo;
                                                 $atributos['enlace']=$variableBorrar;
                                                 $atributos['tabIndex']=$esteCampo;
@@ -266,7 +291,8 @@ class consultarForm {
                                                 $atributos['alto']='25';
                                                 $atributos['enlaceImagen']=$rutaBloque."/images/trash.png";
                                                 $mostrarHtml .= $this->miFormulario->enlace($atributos);
-                                                unset($atributos);    
+                                                unset($atributos);
+                                            }    
                                 $mostrarHtml .= "</td>";
 
                                $mostrarHtml .= "</tr>";

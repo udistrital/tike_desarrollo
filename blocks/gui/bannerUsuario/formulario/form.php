@@ -38,15 +38,15 @@ class Formulario {
         $atributos ['id'] = $esteCampo;
         $atributos ['estilo'] = 'divGeneral2';
         $atributos ['estiloEnLinea'] = '';
-        $atributos ['titulo'] = $this->lenguaje->getCadena($esteCampo . 'Titulo');
+        //$atributos ['titulo'] = $this->lenguaje->getCadena($esteCampo . 'Titulo');
         echo $this->miFormulario->division("inicio", $atributos); {
 
             // ------------------- Inicio División -------------------------------
             $esteCampo = 'divLogoNotificador';
             $atributos ['id'] = $esteCampo;
-            $atributos['imagen'] = $this->miConfigurador->getVariableConfiguracion('rutaUrlBloque') . 'css/images/banner_tike.png';
+            $atributos['imagen'] = $this->miConfigurador->getVariableConfiguracion('rutaUrlBloque') . 'css/images/banner_tike2.png';
             $atributos['estilo'] = $esteCampo;
-            $atributos['etiqueta'] = $this->lenguaje->getCadena($esteCampo . 'Titulo');
+           // $atributos['etiqueta'] = $this->lenguaje->getCadena($esteCampo . 'Titulo');
             $atributos['ancho'] = '100%';
             $atributos['alto'] = '5%';
             echo $this->miFormulario->campoImagen($atributos);
