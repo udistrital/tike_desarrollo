@@ -106,7 +106,7 @@ class reportico_report_csv extends reportico_report
 		$padstring = ucwords(strtolower($padstring));
 		$padstring = sw_translate($padstring);
 
-		echo '"'.$padstring.'"'.";";
+		echo '"'.$padstring.'"'.",";
 	}
 
 	function format_column(& $column_item)
@@ -125,7 +125,7 @@ class reportico_report_csv extends reportico_report
 
         // Handle double quotes by changing " to ""
         $output = str_replace("\"", "\"\"", $output);
-        echo "\"".$output."\";";
+        echo "\"".$output."\",";
 
 	}
 
@@ -143,7 +143,7 @@ class reportico_report_csv extends reportico_report
 				$qn = get_query_column($col["GroupHeaderColumn"]->query_name, $this->query->columns ) ;
 				$padstring = $qn->column_value;
 				echo "\"".$padstring."\"";
-				echo ";";
+				echo ",";
 			}
 		}
 				
@@ -171,7 +171,7 @@ class reportico_report_csv extends reportico_report
 	function format_criteria_selection($label, $value)
 	{
 		echo "\"".$label."\"";
-		echo ";";
+		echo ",";
 		echo "\"".$value."\"";
 		echo "\n";
 	}
@@ -201,7 +201,7 @@ class reportico_report_csv extends reportico_report
 				$tempstring = str_replace("_", " ", $col->query_name);
 				$tempstring = ucwords(strtolower($tempstring));
 				echo "\"".sw_translate($col->derive_attribute("column_title",  $tempstring))."\"";
-				echo ";";
+				echo ",";
 			}
 		}
 				
@@ -242,7 +242,7 @@ class reportico_report_csv extends reportico_report
 		{
 			for ($i = 0; $i < count($group->headers); $i++ )
 			{
-				echo ";";
+				echo ",";
 			}
 		}
 	}
@@ -264,7 +264,7 @@ class reportico_report_csv extends reportico_report
 			$padstring = $value_col["GroupTrailerValueColumn"]->old_column_value;
 			echo $group_label.":".$padstring;
 		}
-		echo ";";
+		echo ",";
 	}
 
 	function end_line()

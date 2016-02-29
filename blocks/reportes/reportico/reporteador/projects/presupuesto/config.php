@@ -30,7 +30,7 @@ define('SW_DEFAULT_SHOWCRITERIA', false);
 // are prevented. This means that the designer prevents entry of potentially
 // cdangerous ustom PHP source in the Custom Source Section or potentially
 // dangerous SQL statements in Pre-Execute Criteria sections
-define('SW_SAFE_DESIGN_MODE',true);
+define('SW_SAFE_DESIGN_MODE',false);
 
 // If false prevents any designing of reports
 define('SW_ALLOW_MAINTAIN', true);
@@ -56,8 +56,8 @@ else
 {
 define('SW_DB_DRIVER', SW_DB_TYPE);
 define('SW_DB_USER', 'SICGEFAD');
-define('SW_DB_PASSWORD', 's1cg3f@d2013');
-define('SW_DB_HOST', '10.20.251.254:1524');
+define('SW_DB_PASSWORD', 's1cg3f@d2014=EVA');
+define('SW_DB_HOST', '10.20.0.7:1521');
 define('SW_DB_DATABASE', 'ud');
 }
 define('SW_DB_CONNECT_FROM_CONFIG', true);

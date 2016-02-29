@@ -2184,7 +2184,9 @@ class reportico extends reportico_object
 
 			if ( $expval ) 
 			{
-				$str = ' AND '.$this->match_column.' LIKE "%'.$expval.'%"';
+				//$str = ' AND '.$this->match_column.' LIKE "%'.$expval.'%"';
+				$str = ' AND ('.$this->match_column.' LIKE \'%'.$expval.'%\'';
+				$str .= ' OR UPPER('.$this->match_column.') LIKE UPPER(\'%'.$expval.'%\'))';
 			}
 		}
 
